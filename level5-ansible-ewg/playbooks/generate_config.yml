@@ -1,0 +1,39 @@
+---
+  
+# Make directories according to inventory file and cleanup last config
+  - name: Make directories/cleanup 
+    hosts: leafs_DC1, leafs_DC2, spines_DC1, spines_DC2
+    tasks:
+    - name: Register variables (underlay)
+      include_vars:
+        file: "{{lookup('env','PWD')}}/vars/underlay.yml"
+        name: underlay
+    - name: Create config directory
+      file:
+        path: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}"
+        state: directory
+    - name: Delete old config file (if exists)
+      file: 
+        path: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_final.cfg"
+        state: absent
+        
+  - name: Create common configs for spines and leafs
+    hosts: leafs_DC1, leafs_DC2, spines_DC1, spines_DC2
+    tasks: 
+    - name: Register variables (underlay)
+      include_vars:
+        file: "{{lookup('env','PWD')}}/vars/underlay.yml"
+        name: underlay
+
+    - name: Create Interface config
+      template: 
+        src: "{{lookup('env','PWD')}}/templates/interfaces.j2"
+        dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}/{{inventory_hostname}}_interface.cfg"
+    
+
+
+
+
+    
+
+

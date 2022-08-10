@@ -1,0 +1,13 @@
+{% for interface in underlay[inventory_hostname]['interfaces'] %}
+  {% if 'loopback0' in interface %}
+    router ospf 100
+      router-id {{ underlay[inventory_hostname]['interfaces'][interface]['ipv4']}}
+  {% endif %}
+interface {{ interface }}
+  ip address {{ underlay[inventory_hostname]['interfaces'][interface]['ipv4']}}/{{ underlay[inventory_hostname]['interfaces'][interface]['mask']}}
+{% if 'Ethernet' in interface %}
+  no switchport
+  mtu {{underlay['global']['MTU']}}
+{% endif %}
+{% endfor %}
+
