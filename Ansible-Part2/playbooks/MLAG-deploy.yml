@@ -1,0 +1,15 @@
+---
+- hosts: leafs_DC1, leafs_DC2
+  gather_facts: no
+  tasks:
+  - name: Register variables
+    include_vars:
+      file: "{{lookup('env','PWD')}}/vars/switch-config.yml"
+      name: switches
+  - name: Create MLAG configuration
+    template:
+      src: "{{lookup('env','PWD')}}/templates/mlag.j2"
+      dest: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}_mlag.cfg"
+  - name: Upload config
+    eos_config:
+      src: "{{lookup('env','PWD')}}/configs/{{inventory_hostname}}_mlag.cfg"
