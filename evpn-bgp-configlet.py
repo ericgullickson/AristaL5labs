@@ -9,7 +9,7 @@ ingest_config = Form.getFieldById( 'yaml_input' ).getValue()
 # Load data from yaml into variable
 switches = yaml.load(ingest_config)
 
-# Get hostname from from
+# Get hostname from form
 hostname = CVPGlobalVariables.getValue(GlobalVariableNames.CVP_SERIAL)
 
 
